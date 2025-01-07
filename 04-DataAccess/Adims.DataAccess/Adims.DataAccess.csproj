@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -60,7 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\BsaeRepository.cs" />
     <Compile Include="Repository\CityRepository.cs" />
-    <Compile Include="Repository\DaelerRepository.cs" />
+    <Compile Include="Repository\DealerRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\05-Domain\Adims.Domain\Adims.Domain.csproj">
@@ -75,6 +75,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202501070806319_inital.resx">
       <DependentUpon>202501070806319_inital.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

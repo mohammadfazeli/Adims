@@ -6,15 +6,15 @@ using System.Linq;
 
 namespace Adims.DataAccess.Repository
 {
-    public interface IDaelerRepository : IBsaeRepository<Dealer>
+    public interface IDealerRepository : IBsaeRepository<Dealer>
     {
 
     }
 
 
-    public class DaelerRepository : BsaeRepository<Dealer>, IDaelerRepository
+    public class DealerRepository : BsaeRepository<Dealer>, IDealerRepository
     {
-        public DaelerRepository(ApplicationContext appContext) : base(appContext)
+        public DealerRepository(ApplicationContext appContext) : base(appContext)
         {
         }
 

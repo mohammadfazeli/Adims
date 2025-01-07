@@ -20,9 +20,9 @@ namespace Adims.Service
 
     public class DealerService : IDealerService
     {
-        private readonly IDaelerRepository _daelerRepository;
+        private readonly IDealerRepository _daelerRepository;
 
-        public DealerService(IDaelerRepository daelerRepository)
+        public DealerService(IDealerRepository daelerRepository)
         {
             this._daelerRepository = daelerRepository;
         }
