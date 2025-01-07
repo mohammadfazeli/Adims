@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-Ui", "01-Ui", "{088555D3-33A4-47E7-8582-0C60682AA105}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-Service", "02-Service", "{4E40E757-23FE-46CF-A0CE-C1F946184A09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-ViewModel", "03-ViewModel", "{B23C595F-929F-4649-917C-236FB854E847}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-DataAccess", "04-DataAccess", "{A3D4EF38-D35F-4EF6-A3C2-1A91998E7707}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05-Domain", "05-Domain", "{944B0122-0354-457C-A253-E3793DD0A26A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adims.Domain", "05-Domain\Adims.Domain\Adims.Domain.csproj", "{CCF4603C-9E31-4595-8A2A-71ABA2548753}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adims.DataAccess", "04-DataAccess\Adims.DataAccess\Adims.DataAccess.csproj", "{4524E669-499A-4150-89B5-7A0DBFA3ADF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adims.ViewModel", "03-ViewModel\Adims.ViewModel\Adims.ViewModel.csproj", "{94DD5732-85E0-4444-9CF7-F133BF142694}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adims.Service", "02-Service\Adims.Service\Adims.Service.csproj", "{109C591B-6711-4934-92A5-13BB3822C3E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adims.UI", "01-UI\Adims.UI\Adims.UI.csproj", "{8DA56748-2ADC-4176-B0C8-449B74CFE6D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCF4603C-9E31-4595-8A2A-71ABA2548753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCF4603C-9E31-4595-8A2A-71ABA2548753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCF4603C-9E31-4595-8A2A-71ABA2548753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCF4603C-9E31-4595-8A2A-71ABA2548753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4524E669-499A-4150-89B5-7A0DBFA3ADF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4524E669-499A-4150-89B5-7A0DBFA3ADF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4524E669-499A-4150-89B5-7A0DBFA3ADF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4524E669-499A-4150-89B5-7A0DBFA3ADF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94DD5732-85E0-4444-9CF7-F133BF142694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94DD5732-85E0-4444-9CF7-F133BF142694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94DD5732-85E0-4444-9CF7-F133BF142694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94DD5732-85E0-4444-9CF7-F133BF142694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{109C591B-6711-4934-92A5-13BB3822C3E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{109C591B-6711-4934-92A5-13BB3822C3E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{109C591B-6711-4934-92A5-13BB3822C3E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{109C591B-6711-4934-92A5-13BB3822C3E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DA56748-2ADC-4176-B0C8-449B74CFE6D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DA56748-2ADC-4176-B0C8-449B74CFE6D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DA56748-2ADC-4176-B0C8-449B74CFE6D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DA56748-2ADC-4176-B0C8-449B74CFE6D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CCF4603C-9E31-4595-8A2A-71ABA2548753} = {944B0122-0354-457C-A253-E3793DD0A26A}
+		{4524E669-499A-4150-89B5-7A0DBFA3ADF3} = {A3D4EF38-D35F-4EF6-A3C2-1A91998E7707}
+		{94DD5732-85E0-4444-9CF7-F133BF142694} = {B23C595F-929F-4649-917C-236FB854E847}
+		{109C591B-6711-4934-92A5-13BB3822C3E6} = {4E40E757-23FE-46CF-A0CE-C1F946184A09}
+		{8DA56748-2ADC-4176-B0C8-449B74CFE6D5} = {088555D3-33A4-47E7-8582-0C60682AA105}
+	EndGlobalSection
+EndGlobal
