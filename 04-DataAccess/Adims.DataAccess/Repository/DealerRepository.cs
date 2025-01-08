@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Data.Entity;
 using System.Linq;
+using System;
 
 namespace Adims.DataAccess.Repository
 {
     public interface IDealerRepository : IBsaeRepository<Dealer>
     {
-
+        bool CheckExistCity(Guid cityId);
     }
 
 
@@ -27,6 +28,13 @@ namespace Adims.DataAccess.Repository
 
             return query.AsEnumerable();
         }
+
+        public bool CheckExistCity(Guid cityId)
+        {
+            return this._entity.AsNoTracking().Any(s => s.CityId == cityId);
+        }
+
+
     }
 
 

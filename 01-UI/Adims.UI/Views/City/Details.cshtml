@@ -1,4 +1,4 @@
-﻿@model Adims.ViewModel.Dealer.DealerListVm
+﻿@model Adims.ViewModel.City.CityListVm
 
 @{
     ViewBag.Title = "Details";
@@ -8,9 +8,11 @@
 <h2>Details</h2>
 
 <div>
-    <h4>DealerListVm</h4>
+    <h4>CityListVm</h4>
     <hr />
     <dl class="dl-horizontal">
+
+
         <dt>
             @Html.DisplayNameFor(model => model.Code)
         </dt>
@@ -20,19 +22,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.OwnerName)
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.OwnerName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DealerNo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DealerNo)
+            @Html.DisplayFor(model => model.Name)
         </dd>
 
         <dt>
@@ -41,14 +35,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.InActive)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CityName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CityName)
         </dd>
 
         <dt>
@@ -66,7 +52,6 @@
         <dd>
             @Html.DisplayFor(model => model.LastModifeDate)
         </dd>
-
     </dl>
 </div>
 <p>

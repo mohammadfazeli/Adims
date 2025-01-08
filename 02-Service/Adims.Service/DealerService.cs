@@ -1,21 +1,23 @@
 ﻿using Adims.DataAccess.Repository;
+using Adims.Domain.Entites;
 using Adims.ViewModel.Dealer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Adims.Service
 {
 
     public interface IDealerService
     {
-        DealerListVm Get(Guid id);
+        Dealer Get(Guid id);
 
         int Add(AddDealerVm add);
         int Update(EditDealerVm add);
         int Remove(Guid id);
-        IEnumerable<DealerListVm> GetDealers();
-
+        IEnumerable<DealerListVm> GetDealers(Expression<Func<Dealer, bool>> expression = null);
+        bool CheckExsistCity(Guid cityId);
     }
 
     public class DealerService : IDealerService
@@ -37,36 +39,33 @@ namespace Adims.Service
                 DealerNo = add.DealerNo,
                 OwnerName = add.OwnerName,
                 InActive = add.InActive,
+
             });
             return _daelerRepository.Save();
         }
 
-        public DealerListVm Get(Guid id)
+        public Dealer Get(Guid id)
         {
-            var dealer = _daelerRepository.Get(id);
-
-            return new DealerListVm()
-            {
-                CityId = dealer.CityId,
-                CityName = dealer.City != null ? dealer.City.Name : "",
-                DealerNo = dealer.DealerNo,
-                Id = dealer.Id,
-                InActive = dealer.InActive,
-                OwnerName = dealer.OwnerName
-            };
-
+            return _daelerRepository.Get(id);
         }
 
-        public IEnumerable<DealerListVm> GetDealers()
+        public bool CheckExsistCity(Guid cityId)
         {
-            return _daelerRepository.GetAll(null).Select(s => new DealerListVm()
+            return _daelerRepository.CheckExistCity(cityId);
+        }
+
+        public IEnumerable<DealerListVm> GetDealers(Expression<Func<Dealer, bool>> expression = null)
+        {
+            return _daelerRepository.GetAll(expression).Select(s => new DealerListVm()
             {
-                CityId = s.CityId,
                 CityName = s.City != null ? s.City.Name : "",
                 DealerNo = s.DealerNo,
-                Id = s.Id,
                 InActive = s.InActive,
-                OwnerName = s.OwnerName
+                OwnerName = s.OwnerName,
+                Id = s.Id,
+                Code = s.Code,
+                CreatedDate = s.CreatedDate,
+                LastModifeDate = s.LastModifeDate
             });
         }
 
@@ -86,7 +85,6 @@ namespace Adims.Service
 
             model.CityId = editvm.CityId;
             model.DealerNo = editvm.DealerNo;
-            model.Id = editvm.Id;
             model.InActive = editvm.InActive;
             model.OwnerName = editvm.OwnerName;
 

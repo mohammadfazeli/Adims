@@ -7,15 +7,16 @@ namespace Adims.Domain.Entites
     public class BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Code { set; get; }
         public DateTime CreatedDate { get; set; }
         public DateTime? LastModifeDate { get; set; }
 
         public BaseEntity()
         {
             Id = Guid.NewGuid();
-            CreatedDate = DateTime.Now;
         }
     }
 }

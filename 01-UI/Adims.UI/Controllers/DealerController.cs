@@ -26,11 +26,20 @@ namespace Adims.UI.Controllers
             return View(dealers);
         }
 
+        public ActionResult Details(Guid id)
+        {
+            var dealer = _dealerService.GetDealers(s => s.Id == id).FirstOrDefault();
+            return View(dealer);
+        }
+
         // فرم ایجاد
         public ActionResult Create()
         {
-            ViewData["CityId"] = new SelectList(_cityService.GetCitys(), "Id", "Name");
-            return View();
+
+            return View(new AddDealerVm()
+            {
+                CityItems = _cityService.GetDrowDown(true)
+            }); ;
         }
 
         // ثبت اطلاعات
@@ -43,20 +52,27 @@ namespace Adims.UI.Controllers
                 _dealerService.Add(dealer);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CityId"] = new SelectList(_cityService.GetCitys(), "Id", "Name", dealer.CityId);
+            dealer.CityItems = _cityService.GetDrowDown(true);
             return View(dealer);
         }
 
         // فرم ویرایش
         public async Task<ActionResult> Edit(Guid id)
         {
-            DealerListVm dealer = _dealerService.Get(id);
+            var dealer = _dealerService.Get(id);
             if (dealer == null)
             {
                 return HttpNotFound();
             }
-            ViewData["CityId"] = new SelectList(_cityService.GetCitys(), "Id", "Name", dealer.CityId);
-            return View(dealer);
+            return View(new EditDealerVm()
+            {
+                CityItems = _cityService.GetDrowDown(),
+                CityId = dealer.CityId,
+                DealerNo = dealer.DealerNo,
+                InActive = dealer.InActive,
+                OwnerName = dealer.OwnerName,
+                Id = dealer.Id
+            });
         }
 
         // ذخیره تغییرات ویرایش
@@ -75,20 +91,20 @@ namespace Adims.UI.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CityId"] = new SelectList(_cityService.GetCitys(), "Id", "Name", dealer.CityId);
+            dealer.CityItems = _cityService.GetDrowDown();
             return View(dealer);
         }
 
         // حذف
         public async Task<ActionResult> Delete(Guid id)
         {
-            DealerListVm dealer = _dealerService.Get(id);
+            var dealer = _dealerService.Get(id);
             if (dealer == null)
             {
                 return HttpNotFound();
             }
 
-            return View(dealer);
+            return View(new EditDealerVm() { Id = dealer.Id, DealerNo = dealer.DealerNo });
         }
 
         // تأیید حذف
@@ -96,7 +112,6 @@ namespace Adims.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
-            DealerListVm dealer = _dealerService.Get(id);
             _dealerService.Remove(id);
             return RedirectToAction(nameof(Index));
         }

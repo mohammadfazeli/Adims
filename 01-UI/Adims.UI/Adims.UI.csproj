@@ -218,6 +218,7 @@
     <Content Include="Views\City\Edit.cshtml" />
     <Content Include="Views\City\Index.cshtml" />
     <Content Include="Views\City\Delete.cshtml" />
+    <Content Include="Views\Dealer\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

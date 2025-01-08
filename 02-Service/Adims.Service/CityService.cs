@@ -1,8 +1,12 @@
 ﻿using Adims.DataAccess.Repository;
+using Adims.Domain.Entites;
 using Adims.ViewModel.City;
+using Adims.ViewModel.Dealer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Web.Mvc;
 
 namespace Adims.Service
 {
@@ -10,11 +14,12 @@ namespace Adims.Service
     public interface ICityService
     {
 
+        City Get(Guid id);
         int Add(AddCityVm add);
         int Update(EditCityVm add);
         int Remove(Guid id);
-        IEnumerable<CityListVm> GetCitys();
-
+        IEnumerable<CityListVm> GetCitys(Expression<Func<City, bool>> expression = null);
+        IEnumerable<SelectListItem> GetDrowDown(bool isAdd = false);
     }
 
     public class CityService : ICityService
@@ -38,12 +43,21 @@ namespace Adims.Service
             return _cityRepository.Save();
         }
 
-        public IEnumerable<CityListVm> GetCitys()
+        public City Get(Guid id)
         {
-            return _cityRepository.GetAll(null).Select(s => new CityListVm()
+            return _cityRepository.Get(id);
+        }
+
+        public IEnumerable<CityListVm> GetCitys(Expression<Func<City, bool>> expression = null)
+        {
+            return _cityRepository.GetAll(expression).Select(s => new CityListVm()
             {
                 Id = s.Id,
-                Name = s.Name
+                Name = s.Name,
+                Code = s.Code,
+                InActive= s.InActive,
+                CreatedDate = s.CreatedDate,
+                LastModifeDate = s.LastModifeDate
             });
         }
 
@@ -62,9 +76,20 @@ namespace Adims.Service
 
             model.Id = editvm.Id;
             model.Name = editvm.Name;
+            model.InActive = editvm.InActive;
 
-           return _cityRepository.Save();
+            return _cityRepository.Save();
 
         }
+
+        public IEnumerable<SelectListItem> GetDrowDown(bool isAdd = false)
+        {
+            return GetCitys(r => !isAdd || !r.InActive).Select(s => new SelectListItem()
+            {
+                Text = s.Name,
+                Value = s.Id.ToString()
+            });
+        }
+
     }
 }

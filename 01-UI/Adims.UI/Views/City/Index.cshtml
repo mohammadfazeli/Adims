@@ -1,31 +1,27 @@
-﻿@model IEnumerable<Adims.ViewModel.Dealer.DealerListVm>
+﻿@model IEnumerable<Adims.ViewModel.City.CityListVm>
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Dealer</h2>
+<h2>City</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
 </p>
-<table class="table table-bordered ">
+<table class="table table-bordered   ">
     <tr>
+
         <th>
             @Html.DisplayNameFor(model => model.Code)
         </th>
+
         <th>
-            @Html.DisplayNameFor(model => model.OwnerName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DealerNo)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.InActive)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CityName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.CreatedDate)
@@ -45,16 +41,10 @@
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OwnerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DealerNo)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.InActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CityName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)

@@ -12,6 +12,8 @@ namespace Adims.Domain.Entites
         }
 
         public string Name { get; set; }
+        public bool InActive { get; set; }
+
         public virtual ICollection<Dealer> Dealers { get; set; }
 
     }
