@@ -1,4 +1,5 @@
-﻿using StructureMap;
+﻿using Adims.DataAccess.Migrations;
+using System.Data.Entity;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -9,30 +10,14 @@ namespace Adims.UI
     {
         protected void Application_Start()
         {
-            UnityConfig.RegisterComponents(); // Initialize Unity
+            UnityConfig.RegisterComponents(); 
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            //var container = new Container(new IoCRegistry());
-            //// Set MVC Dependency Resolver
-            //DependencyResolver.SetResolver(new StructureMapDependencyResolver(container));
-
+            Database.SetInitializer(new MyDbContextInitializer());
         }
     }
-
-    //public class StructureMapControllerFactory : DefaultControllerFactory
-    //{
-    //    protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
-    //    {
-
-    //        if (controllerType == null)
-    //        {
-    //            throw new HttpException(404, $"Resource not found : {requestContext.HttpContext.Request.Path}");
-    //        }
-    //        return SchObjectFactory.Container.GetInstance(controllerType) as Controller;
-    //    }
-    //}
 }

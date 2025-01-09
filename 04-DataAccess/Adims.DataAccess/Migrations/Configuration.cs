@@ -9,7 +9,7 @@
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(Adims.DataAccess.ApplicationContext context)
@@ -18,6 +18,14 @@
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
+        }
+    }
+
+    public class MyDbContextInitializer : CreateDatabaseIfNotExists<ApplicationContext>
+    {
+        protected override void Seed(ApplicationContext context)
+        {
+            base.Seed(context);
         }
     }
 }
