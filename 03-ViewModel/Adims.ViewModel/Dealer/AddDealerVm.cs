@@ -13,6 +13,7 @@ namespace Adims.ViewModel.Dealer
         [MaxLength(50)]
         public string DealerNo { get; set; }
         public bool InActive { get; set; }
+        [Required]
         public Guid CityId { get; set; }
         public IEnumerable<SelectListItem> CityItems { get; set; }
     }
