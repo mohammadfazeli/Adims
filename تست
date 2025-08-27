@@ -1,0 +1,140 @@
+using Microsoft.EntityFrameworkCore.Diagnostics; using System.Data.Common; using Microsoft.SqlServer.TransactSql.ScriptDom; using System.IO; using System.Text; using System.Collections.Generic;
+
+namespace DynamicRls { // مدل فیلتر داینامیک public class DynamicFilter { public string ColumnName { get; set; } = ""; public string Operator { get; set; } = "="; // =, IN, LIKE, ... public string Value { get; set; } = ""; }
+
+// اینترفیس سرویس فیلتر
+public interface IFilterService
+{
+    List<DynamicFilter> GetFiltersForTable(string tableName);
+}
+
+// Visitor پیشرفته برای اعمال فیلتر روی تمام QuerySpecification و SubQuery
+public class DynamicFilterVisitor : TSqlFragmentVisitor
+{
+    private readonly IFilterService _filterService;
+
+    public DynamicFilterVisitor(IFilterService filterService)
+    {
+        _filterService = filterService;
+    }
+
+    public override void Visit(QuerySpecification node)
+    {
+        ApplyFilters(node);
+        base.Visit(node);
+    }
+
+    public override void Visit(SelectStatement node)
+    {
+        base.Visit(node);
+    }
+
+    private void ApplyFilters(QuerySpecification query)
+    {
+        if (query.FromClause == null) return;
+
+        foreach (var tableRef in query.FromClause.TableReferences)
+        {
+            if (tableRef is NamedTableReference namedTable)
+            {
+                var tableName = namedTable.SchemaObject.BaseIdentifier.Value;
+                var filters = _filterService.GetFiltersForTable(tableName);
+                if (filters.Count == 0) continue;
+
+                BooleanExpression combined = null!;
+                foreach (var filter in filters)
+                {
+                    BooleanExpression exp;
+                    if (filter.Operator.ToUpper() == "IN")
+                    {
+                        exp = new InPredicate
+                        {
+                            Expression = new ColumnReferenceExpression
+                            {
+                                MultiPartIdentifier = new MultiPartIdentifier
+                                {
+                                    Identifiers = { new Identifier { Value = filter.ColumnName } }
+                                }
+                            },
+                            Values = { new LiteralExpression { LiteralType = LiteralType.Integer, Value = filter.Value } }
+                        };
+                    }
+                    else
+                    {
+                        exp = new BooleanComparisonExpression
+                        {
+                            ComparisonType = BooleanComparisonType.Equals,
+                            FirstExpression = new ColumnReferenceExpression
+                            {
+                                MultiPartIdentifier = new MultiPartIdentifier
+                                {
+                                    Identifiers = { new Identifier { Value = filter.ColumnName } }
+                                }
+                            },
+                            SecondExpression = new StringLiteral { Value = filter.Value }
+                        };
+                    }
+
+                    combined = combined == null ? exp : new BooleanBinaryExpression
+                    {
+                        BinaryExpressionType = BooleanBinaryExpressionType.And,
+                        FirstExpression = combined,
+                        SecondExpression = exp
+                    };
+                }
+
+                if (query.WhereClause == null)
+                    query.WhereClause = new WhereClause { SearchCondition = combined };
+                else
+                    query.WhereClause.SearchCondition = new BooleanBinaryExpression
+                    {
+                        BinaryExpressionType = BooleanBinaryExpressionType.And,
+                        FirstExpression = query.WhereClause.SearchCondition,
+                        SecondExpression = combined
+                    };
+            }
+        }
+    }
+}
+
+// Interceptor اصلی برای اعمال RLS داینامیک
+public class DynamicRlsInterceptor : DbCommandInterceptor
+{
+    private readonly IFilterService _filterService;
+
+    public DynamicRlsInterceptor(IFilterService filterService)
+    {
+        _filterService = filterService;
+    }
+
+    public override InterceptionResult<DbDataReader> ReaderExecuting(
+        DbCommand command,
+        CommandEventData eventData,
+        InterceptionResult<DbDataReader> result)
+    {
+        TSql150Parser parser = new TSql150Parser(false);
+        TSqlFragment fragment;
+        IList<ParseError> errors;
+
+        using (var reader = new StringReader(command.CommandText))
+        {
+            fragment = parser.Parse(reader, out errors);
+        }
+
+        if (errors != null && errors.Count > 0)
+            return base.ReaderExecuting(command, eventData, result);
+
+        var visitor = new DynamicFilterVisitor(_filterService);
+        fragment.Accept(visitor);
+
+        var sb = new StringBuilder();
+        var generator = new Sql150ScriptGenerator();
+        generator.GenerateScript(fragment, sb);
+        command.CommandText = sb.ToString();
+
+        return base.ReaderExecuting(command, eventData, result);
+    }
+}
+
+}
+
