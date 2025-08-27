@@ -1,0 +1,49 @@
+private BooleanExpression? GetFilterBooleanExpression(TableReference tableRef)
+{
+    if (tableRef is not NamedTableReference namedTable) return null;
+
+    var tableName = namedTable.Alias?.Value ?? namedTable.SchemaObject.BaseIdentifier.Value;
+    var filters = _filterService.GetFiltersForTable(namedTable.SchemaObject.BaseIdentifier.Value);
+    if (filters.Count == 0) return null;
+
+    BooleanExpression combined = null!;
+    foreach (var filter in filters)
+    {
+        var column = new ColumnReferenceExpression
+        {
+            MultiPartIdentifier = new MultiPartIdentifier()
+        };
+        
+        // اضافه کردن Alias یا نام جدول
+        if (!string.IsNullOrEmpty(namedTable.Alias?.Value))
+            column.MultiPartIdentifier.Identifiers.Add(new Identifier { Value = namedTable.Alias.Value });
+        else
+            column.MultiPartIdentifier.Identifiers.Add(new Identifier { Value = namedTable.SchemaObject.BaseIdentifier.Value });
+
+        column.MultiPartIdentifier.Identifiers.Add(new Identifier { Value = filter.ColumnName });
+
+        BooleanExpression exp = filter.Operator.ToUpper() switch
+        {
+            "IN" => new InPredicate
+            {
+                Expression = column,
+                Values = { new IntegerLiteral { Value = filter.Value } }
+            },
+            _ => new BooleanComparisonExpression
+            {
+                ComparisonType = BooleanComparisonType.Equals,
+                FirstExpression = column,
+                SecondExpression = new StringLiteral { Value = filter.Value }
+            }
+        };
+
+        combined = combined == null ? exp : new BooleanBinaryExpression
+        {
+            BinaryExpressionType = BooleanBinaryExpressionType.And,
+            FirstExpression = combined,
+            SecondExpression = exp
+        };
+    }
+
+    return combined;
+}
