@@ -1,0 +1,41 @@
+ BooleanExpression exp = f.Operator.ToUpper() switch
+ {
+     "=" => new BooleanComparisonExpression
+     {
+         ComparisonType = BooleanComparisonType.Equals,
+         FirstExpression = column,
+         SecondExpression = new StringLiteral { Value = f.Value }
+     },
+     ">" => new BooleanComparisonExpression
+     {
+         ComparisonType = BooleanComparisonType.GreaterThan,
+         FirstExpression = column,
+         SecondExpression = new StringLiteral { Value = f.Value }
+     },
+     "<" => new BooleanComparisonExpression
+     {
+         ComparisonType = BooleanComparisonType.LessThan,
+         FirstExpression = column,
+         SecondExpression = new StringLiteral { Value = f.Value }
+     },
+     //"IN" => new InPredicate
+     //{
+     //    Expression = column,
+     //    Values = { new IntegerLiteral { Value = f.Value } }
+
+     //    //Values = f.Value.Split(',')
+     //    //                .Select(v => new StringLiteral { Value = v.Trim() })
+     //    //                .Cast<ScalarExpression>()
+     //    //                .ToList()
+     //},
+     "IN" => new BooleanExpressionSnippet
+     {
+         Script=$"{tableOrAlias}.{f.ColumnName} In ( Select [value] from OPENJSON('[{f.Value}]')  )"
+     },
+     _ => new BooleanComparisonExpression
+     {
+         ComparisonType = BooleanComparisonType.Equals,
+         FirstExpression = column,
+         SecondExpression = new StringLiteral { Value = f.Value }
+     }
+ };
