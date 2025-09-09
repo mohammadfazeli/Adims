@@ -1,0 +1,79 @@
+{
+  "definitionId": "user-registration-flow",
+  "version": 1,
+  "isLatest": true,
+  "isPublished": true,
+  "name": "User Registration Workflow",
+  "activities": [
+    {
+      "activityId": "start",
+      "type": "HttpEndpoint",
+      "properties": {
+        "path": "/api/register",
+        "methods": ["POST"]
+      }
+    },
+    {
+      "activityId": "registerUser",
+      "type": "HttpRequest",
+      "properties": {
+        "url": "http://localhost:5001/api/users",
+        "method": "POST",
+        "content": "{ \"name\": \"{{Input.name}}\", \"email\": \"{{Input.email}}\" }",
+        "contentType": "application/json"
+      }
+    },
+    {
+      "activityId": "fork",
+      "type": "Fork",
+      "properties": {
+        "branches": ["message", "customer"]
+      }
+    },
+    {
+      "activityId": "registerMessage",
+      "type": "HttpRequest",
+      "properties": {
+        "url": "http://localhost:5002/api/messages",
+        "method": "POST",
+        "content": "{ \"userEmail\": \"{{Input.email}}\" }",
+        "contentType": "application/json"
+      }
+    },
+    {
+      "activityId": "registerCustomer",
+      "type": "HttpRequest",
+      "properties": {
+        "url": "http://localhost:5003/api/customers",
+        "method": "POST",
+        "content": "{ \"userEmail\": \"{{Input.email}}\" }",
+        "contentType": "application/json"
+      }
+    },
+    {
+      "activityId": "join",
+      "type": "Join",
+      "properties": {
+        "mode": "WaitAll"
+      }
+    },
+    {
+      "activityId": "response",
+      "type": "WriteHttpResponse",
+      "properties": {
+        "statusCode": 200,
+        "content": "\"User registered successfully with message and customer records\"",
+        "contentType": "application/json"
+      }
+    }
+  ],
+  "connections": [
+    { "sourceActivityId": "start", "targetActivityId": "registerUser" },
+    { "sourceActivityId": "registerUser", "targetActivityId": "fork" },
+    { "sourceActivityId": "fork", "targetActivityId": "registerMessage", "outcome": "message" },
+    { "sourceActivityId": "fork", "targetActivityId": "registerCustomer", "outcome": "customer" },
+    { "sourceActivityId": "registerMessage", "targetActivityId": "join" },
+    { "sourceActivityId": "registerCustomer", "targetActivityId": "join" },
+    { "sourceActivityId": "join", "targetActivityId": "response" }
+  ]
+}
