@@ -1,0 +1,107 @@
+عالی 👌
+من یک نمونه Workflow JSON برای Elsa 3 می‌سازم که همون کاری رو بکنه که گفتی:
+
+ورودی: POST /add-user-flow با مدل AddUserDto (بدنۀ JSON)
+
+ذخیره توی متغیر user
+
+ارسال با Http Request به سرویس اصلی /api/user/add
+
+برگردوندن پاسخ با Http Response
+
+
+
+---
+
+📂 فایل Workflow (قابل Import در Elsa Studio 3)
+
+{
+  "definitionId": "add-user-flow",
+  "name": "Add User Flow",
+  "version": 1,
+  "variables": {
+    "user": null
+  },
+  "activities": [
+    {
+      "activityId": "http-endpoint",
+      "type": "Elsa.Http.Activities.HttpEndpoint",
+      "displayName": "Http Endpoint",
+      "properties": {
+        "path": "/add-user-flow",
+        "method": "POST",
+        "readContentAs": "Json"
+      }
+    },
+    {
+      "activityId": "set-variable",
+      "type": "Elsa.Workflows.Activities.SetVariable",
+      "displayName": "Set Variable",
+      "properties": {
+        "variableName": "user",
+        "value": "lastResult().RequestBody"
+      }
+    },
+    {
+      "activityId": "http-request",
+      "type": "Elsa.Http.Activities.HttpRequest",
+      "displayName": "Http Request",
+      "properties": {
+        "url": "https://localhost:5001/api/user/add",
+        "method": "POST",
+        "contentType": "application/json",
+        "content": "variables(\"user\")"
+      }
+    },
+    {
+      "activityId": "http-response",
+      "type": "Elsa.Http.Activities.HttpResponse",
+      "displayName": "Http Response",
+      "properties": {
+        "statusCode": 200,
+        "content": "\"User added successfully via flow.\""
+      }
+    }
+  ],
+  "connections": [
+    {
+      "sourceActivityId": "http-endpoint",
+      "targetActivityId": "set-variable"
+    },
+    {
+      "sourceActivityId": "set-variable",
+      "targetActivityId": "http-request"
+    },
+    {
+      "sourceActivityId": "http-request",
+      "targetActivityId": "http-response"
+    }
+  ]
+}
+
+
+---
+
+📌 توضیح
+
+وقتی کلاینت POST /add-user-flow رو صدا بزنه با JSON شبیه زیر:
+
+{
+  "firstName": "Ali",
+  "lastName": "Ahmadi"
+}
+
+این JSON توی متغیر user ذخیره میشه.
+
+بعد همون JSON به /api/user/add پاس داده میشه.
+
+در آخر یک پیام ساده برمی‌گرده:
+
+User added successfully via flow.
+
+
+
+---
+
+می‌خوای برات یک نسخه‌ی آماده .json فایل واقعی هم تولید کنم که فقط Import کنی توی Studio، یا همین متن کافیه؟
+
