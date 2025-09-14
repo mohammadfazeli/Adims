@@ -1,0 +1,68 @@
+{
+  "id": "add-user-flow",
+  "definitionId": "add-user-flow",
+  "name": "Add User Flow",
+  "version": 1,
+  "isReadonly": false,
+  "variables": {
+    "user": null
+  },
+  "activities": [
+    {
+      "id": "1",
+      "type": "HttpEndpoint",
+      "name": "Http Endpoint",
+      "properties": {
+        "Path": "/add-user-flow",
+        "Method": "POST",
+        "ReadContentAs": "Json"
+      }
+    },
+    {
+      "id": "2",
+      "type": "SetVariable",
+      "name": "Set Variable",
+      "properties": {
+        "VariableName": "user",
+        "Value": "lastResult().RequestBody"
+      }
+    },
+    {
+      "id": "3",
+      "type": "HttpRequest",
+      "name": "Http Request",
+      "properties": {
+        "Url": "https://localhost:5001/api/user/add",
+        "Method": "POST",
+        "ContentType": "application/json",
+        "Content": "variables(\"user\")"
+      }
+    },
+    {
+      "id": "4",
+      "type": "HttpResponse",
+      "name": "Http Response",
+      "properties": {
+        "StatusCode": 200,
+        "Content": "\"User added successfully via flow.\""
+      }
+    }
+  ],
+  "connections": [
+    {
+      "sourceId": "1",
+      "targetId": "2",
+      "outcome": "Done"
+    },
+    {
+      "sourceId": "2",
+      "targetId": "3",
+      "outcome": "Done"
+    },
+    {
+      "sourceId": "3",
+      "targetId": "4",
+      "outcome": "Done"
+    }
+  ]
+}
